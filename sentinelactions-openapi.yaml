@@ -1,66 +1,25 @@
-openapi: 3.0.0
-info:
-  title: Sentinel Incident Actions
-  version: 1.0.0
-  description: Allows closing and commenting on Microsoft Sentinel incidents
+Descriptor:
+  Name: SentinelOne
+  DisplayName: SentinelOne EDR (Community)
+  Description: SentinelOne EDR
+  Settings: 
+    - Description: The URL of the instance to connect to
+      Name: SentinelOneInstanceUrl
+      Label: SentinelOne Instance URL
+      HintText: e.g. https://<example-instanse-name>.api.sentinelone.net
+      SettingType: String
+      Required: true
 
-servers:
-  - url: https://management.azure.com
+  SupportedAuthTypes:
+    - ApiKey
+  Authorization:
+    Type: APIKey
+    Key: Authorization
+    Location: Header
+    AuthScheme: 'APIToken'
 
-paths:
-  /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.OperationalInsights/workspaces/{workspaceName}/providers/Microsoft.SecurityInsights/incidents/{incidentId}:
-    patch:
-      operationId: CloseIncident
-      summary: Close a Sentinel incident with verdict and comment
-      parameters:
-        - name: subscriptionId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Azure subscription ID
-        - name: resourceGroupName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Resource group name
-        - name: workspaceName
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Log Analytics workspace name
-        - name: incidentId
-          in: path
-          required: true
-          schema:
-            type: string
-          description: Sentinel incident GUID
-        - name: api-version
-          in: query
-          required: true
-          schema:
-            type: string
-            default: "2023-02-01"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                properties:
-                  type: object
-                  properties:
-                    status:
-                      type: string
-                      enum: [Closed]
-                    classification:
-                      type: string
-                      enum: [FalsePositive, BenignPositive, TruePositive, Undetermined]
-                    classificationComment:
-                      type: string
-      responses:
-        "200":
-          description: Incident updated successfully
+SkillGroups:
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://gist.githubusercontent.com/Yaniv-Shasha/2896e9f9e76a56ce7ce6e7c657b92b80/raw/
+      "EndpointUrlSettingName": "SentinelOneInstanceUrl"
